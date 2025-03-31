@@ -1,0 +1,39 @@
+.home-p-campaign{
+  display: flex;
+  flex-wrap: wrap;
+  /* margin-top: 100px; */
+  /* padding: 10px; */
+  /* margin: 10px; */
+  /* flex-direction: row; */
+  /* margin-left: 10px;
+  margin-right: 10px; */
+  /* justify-content: space-around; */
+  /* align-items: center; */
+  justify-content: space-between;
+}
+
+.home-main-div{
+  margin: 10px;
+}
+
+.main-div-header h1{
+  color: white;
+}
+
+.main-div-header button{
+  color: white;
+  background-color: rgb(86, 211, 151);
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding: 10px;
+}
+
+.main-div-header {
+  margin-bottom: 10px; 
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
