@@ -10,6 +10,8 @@ function CreateCampaignPage(props) {
   const [Deadline, setDeadline] = useState("")
   const [Target, setTarget] = useState(null)
   const [ Thumbnail, setThumbnail ] = useState("abcdefg")
+  const [isLoading, setIsLoading] = useState(false);
+
 
 
 
@@ -27,28 +29,60 @@ function CreateCampaignPage(props) {
   }
 
 
-  async function handleSubmit(){
-    try{
+  // async function handleSubmit(){
+  //   try{
+  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //     await provider.send("eth_requestAccounts", []); // Request accounts first
+  //     const signer = provider.getSigner();
+  //     const Account = signer.getAddress();
+
+  //     const targetInWei = ethers.utils.parseEther(Target);
+
+  //     const contractInstance = new ethers.Contract(contractAddress, contractABI, signer )
+  //     const tx = await contractInstance.createCampaign(Account, Campaign, targetInWei, Number(Deadline), Thumbnail)
+  //     const tx1 = await contractInstance.numberOfCampaigns()
+  //     const receipt = await tx.wait()
+  //     console.log("tx: ", tx)
+  //     console.log("tx1: ", tx1)
+  //     // console.log("receipt: ", receipt)
+  //     // const campaignID = receipt.events[0].args[0]
+  //     // window.alert("The campaign ID is: ", campaignID)
+  //   }catch(e){
+  //     window.alert(e)
+  //     console.error(e)
+  //   }
+
+  // }
+
+  async function handleSubmit() {
+    setIsLoading(true); // Start loading
+    try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []); // Request accounts first
+      await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
-      const Account = signer.getAddress();
-
-      const contractInstance = new ethers.Contract(contractAddress, contractABI, signer )
-      const tx = await contractInstance.createCampaign(Account, Campaign, Number(Target), Number(Deadline), Thumbnail)
-      const tx1 = await contractInstance.numberOfCampaigns()
-      const receipt = await tx.wait()
-      console.log("tx: ", tx)
-      console.log("tx1: ", tx1)
-      // console.log("receipt: ", receipt)
-      // const campaignID = receipt.events[0].args[0]
-      // window.alert("The campaign ID is: ", campaignID)
-    }catch(e){
-      window.alert(e)
-      console.error(e)
+      const Account = await signer.getAddress(); // <-- don't forget the await here
+  
+      const targetInWei = ethers.utils.parseEther(Target);
+      const contractInstance = new ethers.Contract(contractAddress, contractABI, signer);
+  
+      const tx = await contractInstance.createCampaign(Account, Campaign, targetInWei, Number(Deadline), Thumbnail);
+      const receipt = await tx.wait();
+  
+      console.log("tx: ", tx);
+      console.log("receipt: ", receipt);
+  
+      window.alert("Campaign created successfully!");
+  
+      // optionally: navigate back to homepage
+      navigate('/');
+    } catch (e) {
+      window.alert(e.message);
+      console.error(e);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
-
   }
+  
 
   async function handleRetrieve(){
     try{
@@ -92,7 +126,7 @@ function CreateCampaignPage(props) {
 
   return (
     <div>
-    <button onClick={() => navigate('/')} className='text-white border absolute top-1/20 left-1/30 p-2 rounded font-bold'>Go Back to Campaigns</button>
+    <button onClick={() => navigate('/')} className='text-white border absolute top-1/20 left-1/30 p-2 rounded font-bold cursor-pointer'>Go Back to Campaigns</button>
     <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 '>
     <div className='flex flex-1 flex-col gap-4 items-center border border-white w-fit p-5 rounded-lg'>
       <div>
@@ -114,11 +148,18 @@ function CreateCampaignPage(props) {
       </div>
       <div>
         {/* <button className='text-white'>Submit</button> */}
-        <button className='text-white border border-white p-2 pl-5 pr-5 rounded' onClick={handleSubmit}>Submit</button>
+        <button className='text-white border border-white p-2 pl-5 pr-5 rounded cursor-pointer' onClick={handleSubmit}>Submit</button>
       </div>
     </div>
     </div>
+    {isLoading && (
+      <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div className="text-white text-xl animate-pulse">Creating campaign... Please wait</div>
+      </div>
+    )}
     </div>
+
+    
     // <div>
     //   <h1>you are logged in!!!! as {props.WalletAddress}</h1>  
     //   <label>enter campaign name: {Campaign}</label>

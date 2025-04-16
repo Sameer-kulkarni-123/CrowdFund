@@ -16,17 +16,41 @@ const App = () => {
   const [Account, setAccount] = useState(null)
   const [isConnected, setisConnected] = useState(false)
 
+  // useEffect(() => {
+  //   if(window.ethereum){
+  //     window.ethereum.on('accountsChanged', handleAccountChanged);
+  //   }
+  
+  //   return () => {
+  //     if(window.ethereum){
+  //       window.ethereum.removeListener('accountsChanged', handleAccountChanged);
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if(window.ethereum){
+    if (window.ethereum) {
+      // Check if wallet is already connected
+      window.ethereum.request({ method: 'eth_accounts' })
+        .then(accounts => {
+          if (accounts.length > 0) {
+            setAccount(accounts[0]);
+            setisConnected(true);
+          }
+        })
+        .catch(console.error);
+  
+      // Listen for account changes
       window.ethereum.on('accountsChanged', handleAccountChanged);
     }
   
     return () => {
-      if(window.ethereum){
+      if (window.ethereum) {
         window.ethereum.removeListener('accountsChanged', handleAccountChanged);
       }
-    }
+    };
   }, []);
+  
 
   function handleAccountChanged(accounts){
     if(accounts.length > 0 && Account !== accounts[0]){

@@ -189,13 +189,19 @@ function HomePage(props) {
         {/* <button onClick={}>Create Campaign</button> */}
       </div>
       <div className='home-p-campaign'>
-        {AllCampaignsJson.map((campaign, index) => (
+        {/* {AllCampaignsJson.map((campaign, index) => (
           <CampaignCard campaignID={index} campaignName={campaign.campaignName} timeToDeadline={UnixToDaysLeft(campaign.deadline)} totalMoneyRaised={ethers.utils.formatEther(FindTotalRaised(campaign.donations))} target={campaign.target} owner={campaign.owner} />
-        ))}
-        {/* {AllCampaignsJson.map((c) => (
-          <CampaignCard />
         ))} */}
-        {/* <CampaignCard /> */}
+        {AllCampaignsJson.map((campaign, index) => {
+         if (UnixToDaysLeft(campaign.deadline) > 0)  {
+            console.log(UnixToDaysLeft(campaign.deadline))
+            return <CampaignCard campaignID={index} campaignName={campaign.campaignName} timeToDeadline={UnixToDaysLeft(campaign.deadline)} totalMoneyRaised={ethers.utils.formatEther(FindTotalRaised(campaign.donations))} target={ethers.utils.formatEther(campaign.target)} owner={campaign.owner} />
+          }else{
+            null
+          }
+          
+        }
+        )}
       </div>
     </div>
   )
