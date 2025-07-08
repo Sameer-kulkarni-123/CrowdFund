@@ -1,5 +1,5 @@
 import React from 'react'
-import './OnBoardingPage.css'
+import './onBoardingPage.css'
 
 function OnBoardingPage(props) {
   return (
